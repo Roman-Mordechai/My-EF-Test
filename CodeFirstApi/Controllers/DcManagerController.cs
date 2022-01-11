@@ -24,12 +24,18 @@ namespace CodeFirstApi.Controllers
             _dcManagerService = dcManagerService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddCharacter(AddDcManagerDto addDcManager)
+        [HttpPost("AddManager")]
+        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddManager(AddDcManagerDto addDcManager)
         {
 
-            return Ok(await _dcManagerService.AddDcManager(addDcManager));
+            return Ok(await _dcManagerService.AddManager(addDcManager));
         }
 
+        [HttpPost("GetAllManagers")]
+        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> GetAllManagers()
+        {
+
+            return Ok(await _dcManagerService.GetAllManagers());
+        }
     }
 }

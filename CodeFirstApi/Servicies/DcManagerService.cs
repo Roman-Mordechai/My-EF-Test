@@ -17,13 +17,13 @@ namespace CodeFirstApi.Servicies
             _dcManagerDataService = dcManagerDataService;
         }
 
-        public async Task<ServiceResponse<List<GetDcManagerDto>>> AddDcManager(AddDcManagerDto addDcManager)
+        public async Task<ServiceResponse<List<GetDcManagerDto>>> AddManager(AddDcManagerDto addDcManager)
         {
             var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
 
             try
             {
-                return await _dcManagerDataService.AddDcManager(addDcManager);
+                return await _dcManagerDataService.AddManager(addDcManager);
             }
             catch (Exception ex)
             {
@@ -34,5 +34,20 @@ namespace CodeFirstApi.Servicies
 
         }
 
+        public async Task<ServiceResponse<List<GetDcManagerDto>>> GetAllManagers()
+        {
+            var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
+
+            try
+            {
+                return await _dcManagerDataService.GetAllManagers();
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "GetAllManagers service failed! " + ex.Message;
+                return serviceResponse;
+            }
+        }
     }
 }

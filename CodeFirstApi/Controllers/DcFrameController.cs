@@ -23,8 +23,8 @@ namespace CodeFirstApi.Controllers
             _dcFrameService = dcFrameService;
         }
 
-        [HttpPost("AddCharacter")]
-        public async Task<ActionResult<ServiceResponse<List<DcFrameEntity>>>> AddCharacter(AddDcFrameDto addDcFrame)
+        [HttpPost("AddFrame")]
+        public async Task<ActionResult<ServiceResponse<List<DcFrameEntity>>>> AddFrame(AddDcFrameDto addDcFrame)
         {
 
             var rsp = await _dcFrameService.AddFrame(addDcFrame);

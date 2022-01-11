@@ -10,6 +10,7 @@ namespace CodeFirstApi.Servicies
 {
     public interface IDcManagerDataService
     {
-        Task<ServiceResponse<List<GetDcManagerDto>>> AddDcManager(AddDcManagerDto addDcManager);
+        Task<ServiceResponse<List<GetDcManagerDto>>> AddManager(AddDcManagerDto addDcManager);
+        Task<ServiceResponse<List<GetDcManagerDto>>> GetAllManagers();
     }
 }
