@@ -30,6 +30,7 @@ namespace CodeFirstApi
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IDcManagerDataService, DcManagerDataService>();
+            services.AddScoped<IDcManagerService, DcManagerService>();
             services.AddScoped<IDcFrameDataService, DcFrameDataService>();
             services.AddScoped<IDcFrameService, DcFrameService>();
 

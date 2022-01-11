@@ -1,14 +1,13 @@
-﻿using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
+﻿using CodeFirstApi.Models;
 using CodeFirstApi.Models.DcManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Servicies
+namespace CodeFirstApi.Domain.Servicies
 {
-    public interface IDcManagerDataService
+    public interface IDcManagerService
     {
         Task<ServiceResponse<List<GetDcManagerDto>>> AddDcManager(AddDcManagerDto addDcManager);
     }

@@ -20,14 +20,18 @@ namespace CodeFirstApi.Servicies
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<DcManagerEntity>>> AddDcManager(AddDcManagerDto addDcManager)
+        public async Task<ServiceResponse<List<GetDcManagerDto>>> AddDcManager(AddDcManagerDto addDcManager)
         {
-            var serviceResponse = new ServiceResponse<List<DcManagerEntity>>();
+            var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
             DcManagerEntity newDcManager = _mapper.Map<DcManagerEntity>(addDcManager);
             _context.DcManagers.Add(newDcManager);
             await _context.SaveChangesAsync();
-            serviceResponse.Data = await _context.DcManagers
+
+            var dataRsp = await _context.DcManagers
                 .ToListAsync();
+
+            serviceResponse.Data = _mapper.Map<List<GetDcManagerDto>>(dataRsp);
+
             return serviceResponse;
 
         }

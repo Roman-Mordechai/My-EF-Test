@@ -14,9 +14,10 @@ namespace CodeFirstApi
     {
         public AutoMapperProfile()
         {
+            CreateMap<AddDcManagerDto, DcManagerEntity>();
             CreateMap<AddDcFrameDto, DcFrameEntity>();
             CreateMap<AddDcClassDto, DcClassEntity>();
-            
+
             CreateMap<DcManagerEntity, GetDcManagerDto>();
             CreateMap<DcFrameEntity, GetDcFrameDto>();
             CreateMap<DcClassEntity, GetDcClassDto>();

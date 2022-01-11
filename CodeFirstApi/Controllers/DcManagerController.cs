@@ -1,4 +1,5 @@
-﻿using CodeFirstApi.Entities;
+﻿using CodeFirstApi.Domain.Servicies;
+using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
 using CodeFirstApi.Models.DcManager;
 using CodeFirstApi.Servicies;
@@ -16,15 +17,15 @@ namespace CodeFirstApi.Controllers
     public class DcManagerController : ControllerBase
     {
         
-        private readonly IDcManagerDataService _dcManagerService;
+        private readonly IDcManagerService _dcManagerService;
 
-        public DcManagerController(IDcManagerDataService dcManagerService)
+        public DcManagerController(IDcManagerService dcManagerService)
         {
             _dcManagerService = dcManagerService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<DcManagerEntity>>>> AddCharacter(AddDcManagerDto addDcManager)
+        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddCharacter(AddDcManagerDto addDcManager)
         {
 
             return Ok(await _dcManagerService.AddDcManager(addDcManager));
