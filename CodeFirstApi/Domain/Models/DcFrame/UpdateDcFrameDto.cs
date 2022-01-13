@@ -1,13 +1,11 @@
 ﻿using CodeFirstApi.Models.DcFrame;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CodeFirstApi.Domain.Models.DcFrame
 {
-    public class AddDcFrameDto
+    public class UpdateDcFrameDto
     {
+        public int Id { get; set; }
         public int FrameCode { get; set; }
         public string FrameName { get; set; }
         public int DcManagerId { get; set; }

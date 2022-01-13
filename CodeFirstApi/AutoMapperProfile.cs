@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using CodeFirstApi.Domain.Models.DcManager;
+using CodeFirstApi.Domain.Models.DcFrame;
 using CodeFirstApi.Entities;
 using CodeFirstApi.Models.DcClasses;
 using CodeFirstApi.Models.DcFrame;
-using CodeFirstApi.Models.DcManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,14 @@ namespace CodeFirstApi
         public AutoMapperProfile()
         {
             CreateMap<AddDcManagerDto, DcManagerEntity>();
-            CreateMap<AddDcFrameDto, DcFrameEntity>();
-            CreateMap<AddDcClassDto, DcClassEntity>();
-
             CreateMap<DcManagerEntity, GetDcManagerDto>();
-            CreateMap<DcFrameEntity, GetDcFrameDto>();
-            CreateMap<DcClassEntity, GetDcClassDto>();
+            CreateMap<GetDcManagerDto, DcManagerEntity>();
 
+            CreateMap<AddDcFrameDto, DcFrameEntity>();
+            CreateMap<DcFrameEntity, GetDcFrameDto>();
+
+            CreateMap<DcClassEntity, GetDcClassDto>();
+            CreateMap<AddDcClassDto, DcClassEntity>();
         }
     }
 }

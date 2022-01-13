@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using CodeFirstApi.Data;
+using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
-using CodeFirstApi.Models.DcManager;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CodeFirstApi.Servicies
@@ -20,34 +21,57 @@ namespace CodeFirstApi.Servicies
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<GetDcManagerDto>>> AddManager(AddDcManagerDto addDcManager)
+        public async Task<GetDcManagerDto> AddDcManager(AddDcManagerDto dcManagerDto)
         {
-            var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
-            DcManagerEntity newDcManager = _mapper.Map<DcManagerEntity>(addDcManager);
-            _context.DcManagers.Add(newDcManager);
+            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
+            _context.DcManagers.Add(dcManager);
             await _context.SaveChangesAsync();
-
-            var dataRsp = await _context.DcManagers
-                .ToListAsync();
-
-            serviceResponse.Data = _mapper.Map<List<GetDcManagerDto>>(dataRsp);
-
-            return serviceResponse;
-
+            var dataRsp = await _context.DcManagers.Where(m => m.ManagerId == dcManagerDto.ManagerId).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
         }
 
-        public async Task<ServiceResponse<List<GetDcManagerDto>>> GetAllManagers()
+        public async Task<List<GetDcManagerDto>> GetAllDcManagers()
         {
-            var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
-
-            var dataRsp = await _context.DcManagers
-                .ToListAsync();
-
-            serviceResponse.Data = _mapper.Map<List<GetDcManagerDto>>(dataRsp);
-
-            return serviceResponse;
-
+            var dataRsp = await _context.DcManagers.AsNoTracking().ToListAsync();
+            return _mapper.Map<List<GetDcManagerDto>>(dataRsp);
         }
+
+        public async Task<GetDcManagerDto> GetDcManagerById(int id)
+        {
+            var dataRsp = await _context.DcManagers.Where(m => m.Id == id).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
+        }
+
+        public async Task<GetDcManagerDto> GetDcManagerById(int id, int managerId)
+        {
+            var dataRsp = await _context.DcManagers.Where(m => m.Id == id && m.ManagerId == managerId).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
+        }
+
+        public async Task<GetDcManagerDto> GetDcManagerByManagerId(int id)
+        {
+            var dataRsp = await _context.DcManagers.Where(m => m.ManagerId == id).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
+        }
+
+        public async Task<GetDcManagerDto> UpdateDcManager(GetDcManagerDto dcManagerDto)
+        {
+            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
+            _context.DcManagers.Update(dcManager);
+            await _context.SaveChangesAsync();
+            var dataRsp = await _context.DcManagers.Where(m=>m.Id == dcManagerDto.Id).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
+        }
+
+        public async Task<GetDcManagerDto> DeleteDcManager(GetDcManagerDto dcManagerDto)
+        {
+            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
+            _context.DcManagers.Remove(dcManager);
+            await _context.SaveChangesAsync();
+            var dataRsp = await _context.DcManagers.Where(m => m.Id == dcManagerDto.Id).AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<GetDcManagerDto>(dataRsp);
+        }
+
 
     }
 }

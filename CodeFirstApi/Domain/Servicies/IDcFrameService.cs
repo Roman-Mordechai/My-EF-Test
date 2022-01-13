@@ -1,5 +1,5 @@
-﻿using CodeFirstApi.Models;
-using CodeFirstApi.Models.DcFrame;
+﻿using CodeFirstApi.Domain.Models.DcFrame;
+using CodeFirstApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

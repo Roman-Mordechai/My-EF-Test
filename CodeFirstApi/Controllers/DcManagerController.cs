@@ -1,13 +1,8 @@
-﻿using CodeFirstApi.Domain.Servicies;
-using CodeFirstApi.Entities;
+﻿using CodeFirstApi.Domain.Models.DcManager;
+using CodeFirstApi.Domain.Servicies;
 using CodeFirstApi.Models;
-using CodeFirstApi.Models.DcManager;
-using CodeFirstApi.Servicies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CodeFirstApi.Controllers
@@ -25,17 +20,39 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("AddManager")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddManager(AddDcManagerDto addDcManager)
+        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddDcManager(AddDcManagerDto dcManagerDto)
         {
-
-            return Ok(await _dcManagerService.AddManager(addDcManager));
+            return Ok(await _dcManagerService.AddDcManager(dcManagerDto));
         }
 
         [HttpPost("GetAllManagers")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> GetAllManagers()
+        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> GetAllDcManagers()
         {
+            return Ok(await _dcManagerService.GetAllDcManagers());
+        }
 
-            return Ok(await _dcManagerService.GetAllManagers());
+        [HttpPost("GetManagerById")]
+        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> GetDcManagerById(int id)
+        {
+            return Ok(await _dcManagerService.GetDcManagerById(id));
+        }
+
+        [HttpPost("GetDcManagerByManagerId")]
+        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> GetDcManagerByManagerId(int id)
+        {
+            return Ok(await _dcManagerService.GetDcManagerByManagerId(id));
+        }
+
+        [HttpPost("UpdateManager")]
+        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> UpdateDcManager(GetDcManagerDto dcManagerDto)
+        {
+            return Ok(await _dcManagerService.UpdateDcManager(dcManagerDto));
+        }
+
+        [HttpPost("DeleteDcManager")]
+        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> DeleteDcManager(int id)
+        {
+            return Ok(await _dcManagerService.DeleteDcManager(id));
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using CodeFirstApi.Entities;
+﻿using CodeFirstApi.Domain.Models.DcManager;
+using CodeFirstApi.Entities;
 using CodeFirstApi.Models.DcClasses;
-using CodeFirstApi.Models.DcManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Models.DcFrame
+namespace CodeFirstApi.Domain.Models.DcFrame
 {
     public class GetDcFrameDto
     {

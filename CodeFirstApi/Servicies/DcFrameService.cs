@@ -1,6 +1,6 @@
-﻿using CodeFirstApi.Domain.Servicies;
+﻿using CodeFirstApi.Domain.Models.DcFrame;
+using CodeFirstApi.Domain.Servicies;
 using CodeFirstApi.Models;
-using CodeFirstApi.Models.DcFrame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
