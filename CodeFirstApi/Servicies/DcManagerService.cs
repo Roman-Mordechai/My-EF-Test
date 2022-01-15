@@ -1,6 +1,7 @@
 ﻿using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Domain.Servicies;
 using CodeFirstApi.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,14 @@ namespace CodeFirstApi.Servicies
     public class DcManagerService : IDcManagerService
     {
         private readonly IDcManagerDataService _dcManagerDataService;
+        private readonly ILogger<DcManagerService> _logger;
 
-        public DcManagerService(IDcManagerDataService dcManagerDataService)
+        public DcManagerService(
+            IDcManagerDataService dcManagerDataService,
+            ILogger<DcManagerService> logger)
         {
             _dcManagerDataService = dcManagerDataService;
+            _logger = logger;
         }
 
         public async Task<ServiceResponse<GetDcManagerDto>> AddDcManager(AddDcManagerDto dcManagerDto)
@@ -37,6 +42,8 @@ namespace CodeFirstApi.Servicies
 
         public async Task<ServiceResponse<List<GetDcManagerDto>>> GetAllDcManagers()
         {
+            _logger.LogInformation("Started");
+
             var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
 
             try
