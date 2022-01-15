@@ -20,39 +20,82 @@ namespace CodeFirstApi.Servicies
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<GetDcFrameDto>>> AddFrame(AddDcFrameDto addDcFrame)
+        public async Task<GetDcFrameDto> AddDcFrame(AddDcFrameDto dcFrameDto)
         {
-            var serviceResponse = new ServiceResponse<List<GetDcFrameDto>>();
-            DcFrameEntity newDcFrame = _mapper.Map<DcFrameEntity>(addDcFrame);
-            
-            newDcFrame.DcManager = await _context.DcManagers.Where( m => m.ManagerId == addDcFrame.DcManagerId)
+            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
+            dcFrame.DcManager = await _context.DcManagers.Where( m => m.Id == dcFrameDto.DcManagerId)
                 .FirstOrDefaultAsync();
-
-            _context.DcFrames.Add(newDcFrame);
+            _context.DcFrames.Add(dcFrame);
             await _context.SaveChangesAsync();
-
-            var dataRsp = await _context.DcFrames
-                .Include(c => c.Classes)
-                .Include(c => c.DcManager)
-                .ToListAsync();
-
-            serviceResponse.Data = _mapper.Map<List<GetDcFrameDto>>(dataRsp);
-
-            return serviceResponse;
+            var dataRsp = await GetDcFrameByFrameCode(dcFrameDto.FrameCode);
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
         }
 
-
-        public async Task<ServiceResponse<List<GetDcFrameDto>>> GetAllFrames()
+        public async Task<List<GetDcFrameDto>> GetAllDcFrames()
         {
-            var serviceResponse = new ServiceResponse<List<GetDcFrameDto>>();
             var dataRsp = await _context.DcFrames
                 .Include(c => c.Classes)
                 .Include(c => c.DcManager)
+                .AsNoTracking()
                 .ToListAsync();
 
-            serviceResponse.Data = _mapper.Map<List<GetDcFrameDto>>(dataRsp);
+            return _mapper.Map<List<GetDcFrameDto>>(dataRsp);
+        }
 
-            return serviceResponse;
+        public async Task<GetDcFrameDto> GetDcFrameById(int id)
+        {
+            var dataRsp = await _context.DcFrames
+                .Where(_ => _.Id == id)
+                .Include(c => c.Classes)
+                .Include(c => c.DcManager)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
+        }
+
+        public async Task<GetDcFrameDto> GetDcFrameById(int id, int frameCode)
+        {
+            var dataRsp = await _context.DcFrames
+                .Where(_ => _.Id == id && _.FrameCode == frameCode)
+                .Include(c => c.Classes)
+                .Include(c => c.DcManager)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
+        }
+
+        public async Task<GetDcFrameDto> GetDcFrameByFrameCode(int frameCode)
+        {
+            var dataRsp = await _context.DcFrames
+                .Where(_ => _.FrameCode == frameCode)
+                .Include(c => c.Classes)
+                .Include(c => c.DcManager)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
+        }
+
+        public async Task<GetDcFrameDto> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
+        {
+            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
+            dcFrame.DcManager = await _context.DcManagers.Where(m => m.Id == dcFrameDto.DcManagerId)
+                .FirstOrDefaultAsync();
+            _context.DcFrames.Update(dcFrame);
+            await _context.SaveChangesAsync();
+            var dataRsp = await GetDcFrameById(dcFrameDto.Id);
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
+        }
+
+        public async Task<GetDcFrameDto> DeleteDcFrame(GetDcFrameDto dcFrameDto)
+        {
+            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
+            _context.DcFrames.Remove(dcFrame);
+            await _context.SaveChangesAsync();
+            var dataRsp = await GetDcFrameById(dcFrameDto.Id);
+            return _mapper.Map<GetDcFrameDto>(dataRsp);
         }
     }
 }

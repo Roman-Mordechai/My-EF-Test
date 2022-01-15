@@ -9,7 +9,11 @@ namespace CodeFirstApi.Domain.Servicies
 {
     public interface IDcFrameService
     {
-        Task<ServiceResponse<List<GetDcFrameDto>>> AddFrame(AddDcFrameDto addDcFrame);
-        Task<ServiceResponse<List<GetDcFrameDto>>> GetAllFrames();
+        Task<ServiceResponse<GetDcFrameDto>> AddDcFrame(AddDcFrameDto dcFrameDto);
+        Task<ServiceResponse<List<GetDcFrameDto>>> GetAllDcFrames();
+        Task<ServiceResponse<GetDcFrameDto>> GetDcFrameById(int id);
+        Task<ServiceResponse<GetDcFrameDto>> GetDcFrameByFrameCode(int id);
+        Task<ServiceResponse<GetDcFrameDto>> UpdateDcFrame(UpdateDcFrameDto dcFrameDto);
+        Task<ServiceResponse<GetDcFrameDto>> DeleteDcFrame(int id);
     }
 }

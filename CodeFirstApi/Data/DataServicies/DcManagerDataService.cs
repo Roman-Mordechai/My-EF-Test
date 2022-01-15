@@ -59,7 +59,7 @@ namespace CodeFirstApi.Servicies
             DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
             _context.DcManagers.Update(dcManager);
             await _context.SaveChangesAsync();
-            var dataRsp = await _context.DcManagers.Where(m=>m.Id == dcManagerDto.Id).AsNoTracking().FirstOrDefaultAsync();
+            var dataRsp = await GetDcManagerById(dcManagerDto.Id);
             return _mapper.Map<GetDcManagerDto>(dataRsp);
         }
 
@@ -68,7 +68,7 @@ namespace CodeFirstApi.Servicies
             DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
             _context.DcManagers.Remove(dcManager);
             await _context.SaveChangesAsync();
-            var dataRsp = await _context.DcManagers.Where(m => m.Id == dcManagerDto.Id).AsNoTracking().FirstOrDefaultAsync();
+            var dataRsp = await GetDcManagerById(dcManagerDto.Id);
             return _mapper.Map<GetDcManagerDto>(dataRsp);
         }
 

@@ -21,9 +21,13 @@ namespace CodeFirstApi
 
             CreateMap<AddDcFrameDto, DcFrameEntity>();
             CreateMap<DcFrameEntity, GetDcFrameDto>();
+            CreateMap<GetDcFrameDto, DcFrameEntity>();
+            CreateMap<UpdateDcFrameDto, DcFrameEntity>();
 
-            CreateMap<DcClassEntity, GetDcClassDto>();
             CreateMap<AddDcClassDto, DcClassEntity>();
+            CreateMap<DcClassEntity, GetDcClassDto>();
+            CreateMap<GetDcClassDto, DcClassEntity>();
+
         }
     }
 }

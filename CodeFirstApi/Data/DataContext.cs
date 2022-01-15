@@ -20,6 +20,10 @@ namespace CodeFirstApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DcClassEntity>()
+                .HasOne(d => d.DcFrame)
+                .WithMany(e => e.Classes)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
 
     }
