@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CodeFirstApi.Entities
 {
@@ -11,6 +8,6 @@ namespace CodeFirstApi.Entities
         public int FrameCode { get; set; }
         public string FrameName { get; set; }
         public DcManagerEntity DcManager { get; set; }
-        public List<DcClassEntity> Classes { get; set; }
+        public List<DcClassEntity> DcClasses { get; set; }
     }
 }

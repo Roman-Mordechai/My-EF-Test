@@ -1,18 +1,19 @@
 ﻿using CodeFirstApi.Domain.Models.DcManager;
+using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Servicies
+namespace CodeFirstApi.Domain.DataServices
 {
     public interface IDcManagerDataService
     {
-        Task<GetDcManagerDto> AddDcManager(AddDcManagerDto dcManagerDto);
-        Task<List<GetDcManagerDto>> GetAllDcManagers();
-        Task<GetDcManagerDto> GetDcManagerById(int id);
-        Task<GetDcManagerDto> GetDcManagerById(int id, int managerId);
-        Task<GetDcManagerDto> GetDcManagerByManagerId(int id);
-        Task<GetDcManagerDto> UpdateDcManager(GetDcManagerDto dcManagerDto);
-        Task<GetDcManagerDto> DeleteDcManager(GetDcManagerDto dcManagerDto);
+        Task<ServiceResponse> AddDcManager(DcManagerEntity dcManager);
+        Task<ServiceResponse<List<DcManagerEntity>>> GetAllDcManagers();
+        Task<ServiceResponse<DcManagerEntity>> GetDcManagerById(int id);
+        Task<ServiceResponse<DcManagerEntity>> GetDcManagerById(int id, int managerId);
+        Task<ServiceResponse<DcManagerEntity>> GetDcManagerByManagerId(int id);
+        Task<ServiceResponse> UpdateDcManager(DcManagerEntity dcManager);
+        Task<ServiceResponse> DeleteDcManager(DcManagerEntity dcManager);
     }
 }

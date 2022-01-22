@@ -1,10 +1,10 @@
-﻿namespace CodeFirstApi.Entities
+﻿namespace CodeFirstApi.Domain.Models.DcClasses
 {
-    public class DcClassEntity
+    public class UpdateDcClassDto
     {
         public int Id { get; set; }
+        public int DcFrameId { get; set; }
         public string Name { get; set; }
         public int Occupation { get; set; }
-        public DcFrameEntity DcFrame { get; set; }
     }
 }

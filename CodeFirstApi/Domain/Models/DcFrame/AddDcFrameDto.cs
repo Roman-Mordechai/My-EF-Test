@@ -1,8 +1,5 @@
-﻿using CodeFirstApi.Models.DcFrame;
-using System;
+﻿using CodeFirstApi.Domain.Models.DcClasses;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CodeFirstApi.Domain.Models.DcFrame
 {
@@ -11,6 +8,7 @@ namespace CodeFirstApi.Domain.Models.DcFrame
         public int FrameCode { get; set; }
         public string FrameName { get; set; }
         public int DcManagerId { get; set; }
-        public List<AddDcClassDto> Classes { get; set; }
+        public List<AddDcClassDto> DcClasses { get; set; }
+
     }
 }

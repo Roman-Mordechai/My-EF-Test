@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CodeFirstApi.Models.DcFrame
+﻿namespace CodeFirstApi.Domain.Models.DcClasses
 {
     public class AddDcClassDto
     {
+        public int DcFrameId { get; set; }
         public string Name { get; set; }
         public int Occupation { get; set; }
     }

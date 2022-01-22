@@ -1,10 +1,8 @@
 ﻿using CodeFirstApi.Domain.Models.DcFrame;
-using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Servicies
+namespace CodeFirstApi.Domain.DataServices
 {
     public interface IDcFrameDataService
     {

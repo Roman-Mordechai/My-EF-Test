@@ -1,9 +1,5 @@
 ﻿using CodeFirstApi.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CodeFirstApi.Data
 {
@@ -16,13 +12,13 @@ namespace CodeFirstApi.Data
 
         public DbSet<DcFrameEntity> DcFrames { get; set; }
         public DbSet<DcManagerEntity> DcManagers { get; set; }
-        public DbSet<DcClassEntity> DcClases { get; set; }
+        public DbSet<DcClassEntity> DcClasses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DcClassEntity>()
+             modelBuilder.Entity<DcClassEntity>()
                 .HasOne(d => d.DcFrame)
-                .WithMany(e => e.Classes)
+                .WithMany(e => e.DcClasses)
                 .OnDelete(DeleteBehavior.ClientCascade);
         }
 

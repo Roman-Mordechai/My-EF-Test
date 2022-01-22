@@ -1,4 +1,6 @@
 using CodeFirstApi.Data;
+using CodeFirstApi.Domain.DataServices;
+using CodeFirstApi.Data.DataServicies;
 using CodeFirstApi.Domain.Servicies;
 using CodeFirstApi.Servicies;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 
 namespace CodeFirstApi
 {
@@ -29,10 +30,12 @@ namespace CodeFirstApi
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddScoped<IDcManagerDataService, DcManagerDataService>();
-            services.AddScoped<IDcManagerService, DcManagerService>();
-            services.AddScoped<IDcFrameDataService, DcFrameDataService>();
-            services.AddScoped<IDcFrameService, DcFrameService>();
+            services.AddTransient<IDcManagerDataService, DcManagerDataService>();
+            services.AddTransient<IDcManagerService, DcManagerService>();
+            services.AddTransient<IDcFrameDataService, DcFrameDataService>();
+            services.AddTransient<IDcFrameService, DcFrameService>();
+            services.AddTransient<IDcClassDataService, DcClassDataService>();
+            services.AddTransient<IDcClassService, DcClassService>();
 
             services.AddControllers();
             //services.AddControllers().AddJsonOptions(x =>

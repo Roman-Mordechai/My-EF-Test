@@ -20,7 +20,7 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("AddManager")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcManagerDto>>>> AddDcManager(AddDcManagerDto dcManagerDto)
+        public async Task<ActionResult<ServiceResponse>> AddDcManager(AddDcManagerDto dcManagerDto)
         {
             return Ok(await _dcManagerService.AddDcManager(dcManagerDto));
         }
@@ -44,13 +44,13 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("UpdateManager")]
-        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> UpdateDcManager(GetDcManagerDto dcManagerDto)
+        public async Task<ActionResult<ServiceResponse>> UpdateDcManager(GetDcManagerDto dcManagerDto)
         {
             return Ok(await _dcManagerService.UpdateDcManager(dcManagerDto));
         }
 
         [HttpPost("DeleteDcManager")]
-        public async Task<ActionResult<ServiceResponse<GetDcManagerDto>>> DeleteDcManager(int id)
+        public async Task<ActionResult<ServiceResponse>> DeleteDcManager(int id)
         {
             return Ok(await _dcManagerService.DeleteDcManager(id));
         }

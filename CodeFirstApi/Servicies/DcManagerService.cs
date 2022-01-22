@@ -1,10 +1,12 @@
-﻿using CodeFirstApi.Domain.Models.DcManager;
+﻿using AutoMapper;
+using CodeFirstApi.Domain.DataServices;
+using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Domain.Servicies;
+using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CodeFirstApi.Servicies
@@ -12,152 +14,103 @@ namespace CodeFirstApi.Servicies
     public class DcManagerService : IDcManagerService
     {
         private readonly IDcManagerDataService _dcManagerDataService;
-        private readonly ILogger<DcManagerService> _logger;
+        private readonly IMapper _mapper;
 
         public DcManagerService(
             IDcManagerDataService dcManagerDataService,
-            ILogger<DcManagerService> logger)
+            IMapper mapper
+            )
         {
             _dcManagerDataService = dcManagerDataService;
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<GetDcManagerDto>> AddDcManager(AddDcManagerDto dcManagerDto)
+        public async Task<ServiceResponse> AddDcManager(AddDcManagerDto dcManagerDto)
         {
-            var serviceResponse = new ServiceResponse<GetDcManagerDto>();
-
-            try
-            {
-                serviceResponse.Data = await _dcManagerDataService.AddDcManager(dcManagerDto);
-                return serviceResponse;
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "AddDcManager service failed! " + ex.Message;
-                return serviceResponse;
-            }
-
+            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
+            return  await _dcManagerDataService.AddDcManager(dcManager);
         }
-
         public async Task<ServiceResponse<List<GetDcManagerDto>>> GetAllDcManagers()
         {
-            _logger.LogInformation("Started");
-
             var serviceResponse = new ServiceResponse<List<GetDcManagerDto>>();
-
-            try
+            var rsp = await _dcManagerDataService.GetAllDcManagers();
+            if (rsp != null)
             {
-                serviceResponse.Data = await _dcManagerDataService.GetAllDcManagers();
-                return serviceResponse;
+                serviceResponse.Data = _mapper.Map<List<GetDcManagerDto>>(rsp.Data);
             }
-            catch (Exception ex)
+            else
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetAllManagers service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = "No data found!";
             }
+            return serviceResponse;
         }
-
         public async Task<ServiceResponse<GetDcManagerDto>> GetDcManagerById(int id)
         {
             var serviceResponse = new ServiceResponse<GetDcManagerDto>();
+            var rsp = await _dcManagerDataService.GetDcManagerById(id);
+            if (rsp.Data != null)
+            {
+                serviceResponse.Data = _mapper.Map<GetDcManagerDto>(rsp.Data);
+            }
+            else
+            {
+                serviceResponse.Message = $"Id {id} not found.";
+            }
+            return serviceResponse;
 
-            try
-            {
-                serviceResponse.Data = await _dcManagerDataService.GetDcManagerById(id);
-                if (serviceResponse.Data == null)
-                {
-                    serviceResponse.Message = $"Id {id} not found.";
-                }
-                return serviceResponse;
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetDcManagerById service failed! " + ex.Message;
-                return serviceResponse;
-            }
         }
-
         public async Task<ServiceResponse<GetDcManagerDto>> GetDcManagerByManagerId(int id)
         {
             var serviceResponse = new ServiceResponse<GetDcManagerDto>();
-
-            try
+            var rsp = await _dcManagerDataService.GetDcManagerByManagerId(id);
+            if (rsp.Data != null)
             {
-                serviceResponse.Data = await _dcManagerDataService.GetDcManagerByManagerId(id);
-                if (serviceResponse.Data == null)
-                {
-                    serviceResponse.Message = $"ManagerId {id} not found.";
-                }
-                return serviceResponse;
+                serviceResponse.Data = _mapper.Map<GetDcManagerDto>(rsp.Data);
             }
-            catch (Exception ex)
+            else
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetDcManagerByManagerId service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = $"ManagerId {id} not found.";
             }
+            return serviceResponse;
         }
-
-        public async Task<ServiceResponse<GetDcManagerDto>> UpdateDcManager(GetDcManagerDto dcManagerDto)
+        public async Task<ServiceResponse> UpdateDcManager(GetDcManagerDto dcManagerDto)
         {
-            var serviceResponse = new ServiceResponse<GetDcManagerDto>();
-
-            try
+            var serviceResponse = new ServiceResponse();
+            var managerData = await _dcManagerDataService.GetDcManagerById(dcManagerDto.Id, dcManagerDto.ManagerId);
+            if (managerData.Data != null)
             {
-                var managerData = await _dcManagerDataService.GetDcManagerById(dcManagerDto.Id, dcManagerDto.ManagerId);
-                if (managerData != null)
+                _mapper.Map(dcManagerDto,managerData.Data);
+                managerData.Data.ManagerName = dcManagerDto.ManagerName;
+                serviceResponse = await _dcManagerDataService.UpdateDcManager(managerData.Data);
+                if (serviceResponse.Success)
                 {
-                    serviceResponse.Data = await _dcManagerDataService.UpdateDcManager(dcManagerDto);
-                    serviceResponse.Message = $"ManagerId {dcManagerDto.ManagerId} was updated.";
-                    return serviceResponse;
+                    serviceResponse.Message = $"Id {dcManagerDto.Id} updated.";
                 }
-                else
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = $"Record with Id = {dcManagerDto.Id} and ManagerId = {dcManagerDto.ManagerId} not found.";
-                    return serviceResponse;
-                }
-                
             }
-            catch (Exception ex)
+            else
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "UpdateDcManager service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = $"Id {dcManagerDto.Id}, ManagerId {dcManagerDto.ManagerId} not found.";
             }
+            return serviceResponse;
         }
-
-        public async Task<ServiceResponse<GetDcManagerDto>> DeleteDcManager(int id)
+        public async Task<ServiceResponse> DeleteDcManager(int id)
         {
-            var serviceResponse = new ServiceResponse<GetDcManagerDto>();
-
-            try
+            var serviceResponse = new ServiceResponse();
+            var managerData = await _dcManagerDataService.GetDcManagerById(id);
+            if (managerData.Data != null)
             {
-                var managerData = await _dcManagerDataService.GetDcManagerById(id);
-                if (managerData != null)
-                {
-                    serviceResponse.Data = await _dcManagerDataService.DeleteDcManager(managerData);
-                    serviceResponse.Message = $"Id {id} deleted.";
-                    return serviceResponse;
-                }
-                else
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = $"Id {id} not found.";
-                    return serviceResponse;
-                }
-
+                serviceResponse = await _dcManagerDataService.DeleteDcManager(managerData.Data);
+                serviceResponse.Message = $"Id {id} deleted.";
             }
-            catch (Exception ex)
+            else
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "DeleteDcManager service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = $"Id {id} not found.";
             }
+            return serviceResponse;
         }
+
 
     }
 }

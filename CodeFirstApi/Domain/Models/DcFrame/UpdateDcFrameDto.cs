@@ -1,6 +1,4 @@
-﻿using CodeFirstApi.Models.DcFrame;
-using System.Collections.Generic;
-
+﻿
 namespace CodeFirstApi.Domain.Models.DcFrame
 {
     public class UpdateDcFrameDto

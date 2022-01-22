@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using CodeFirstApi.Data;
+using CodeFirstApi.Domain.DataServices;
 using CodeFirstApi.Domain.Models.DcFrame;
 using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Servicies
+namespace CodeFirstApi.Data.DataServicies
 {
     public class DcFrameDataService : IDcFrameDataService
     {
@@ -23,7 +22,8 @@ namespace CodeFirstApi.Servicies
         public async Task<GetDcFrameDto> AddDcFrame(AddDcFrameDto dcFrameDto)
         {
             DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
-            dcFrame.DcManager = await _context.DcManagers.Where( m => m.Id == dcFrameDto.DcManagerId)
+            dcFrame.DcManager = await _context.DcManagers
+                .Where(m => m.Id == dcFrameDto.DcManagerId)
                 .FirstOrDefaultAsync();
             _context.DcFrames.Add(dcFrame);
             await _context.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace CodeFirstApi.Servicies
         public async Task<List<GetDcFrameDto>> GetAllDcFrames()
         {
             var dataRsp = await _context.DcFrames
-                .Include(c => c.Classes)
+                .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .ToListAsync();
@@ -46,7 +46,7 @@ namespace CodeFirstApi.Servicies
         {
             var dataRsp = await _context.DcFrames
                 .Where(_ => _.Id == id)
-                .Include(c => c.Classes)
+                .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
@@ -58,7 +58,7 @@ namespace CodeFirstApi.Servicies
         {
             var dataRsp = await _context.DcFrames
                 .Where(_ => _.Id == id && _.FrameCode == frameCode)
-                .Include(c => c.Classes)
+                .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
@@ -70,7 +70,7 @@ namespace CodeFirstApi.Servicies
         {
             var dataRsp = await _context.DcFrames
                 .Where(_ => _.FrameCode == frameCode)
-                .Include(c => c.Classes)
+                .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();

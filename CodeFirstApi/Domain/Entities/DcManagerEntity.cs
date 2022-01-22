@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CodeFirstApi.Entities
+﻿namespace CodeFirstApi.Entities
 {
     public class DcManagerEntity
     {

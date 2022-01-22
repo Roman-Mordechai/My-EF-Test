@@ -1,77 +1,146 @@
 ﻿using AutoMapper;
-using CodeFirstApi.Data;
+using CodeFirstApi.Domain.DataServices;
 using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CodeFirstApi.Servicies
+namespace CodeFirstApi.Data.DataServicies
 {
     public class DcManagerDataService : IDcManagerDataService
     {
 
-        private readonly IMapper _mapper;
+
         private readonly DataContext _context;
-        public DcManagerDataService(DataContext context, IMapper mapper)
+        private readonly ILogger<DcManagerDataService> _logger;
+
+        public DcManagerDataService(
+            DataContext context,
+            ILogger<DcManagerDataService> logger
+            )
         {
             _context = context;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<GetDcManagerDto> AddDcManager(AddDcManagerDto dcManagerDto)
+        public async Task<ServiceResponse> AddDcManager(DcManagerEntity dcManager)
         {
-            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
-            _context.DcManagers.Add(dcManager);
-            await _context.SaveChangesAsync();
-            var dataRsp = await _context.DcManagers.Where(m => m.ManagerId == dcManagerDto.ManagerId).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcManagers.Add(dcManager);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"UpdateDcManager data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<List<GetDcManagerDto>> GetAllDcManagers()
+        public async Task<ServiceResponse<List<DcManagerEntity>>> GetAllDcManagers()
         {
-            var dataRsp = await _context.DcManagers.AsNoTracking().ToListAsync();
-            return _mapper.Map<List<GetDcManagerDto>>(dataRsp);
+            var serviceResponse = new ServiceResponse<List<DcManagerEntity>>();
+            try
+            {
+                serviceResponse.Data = await _context.DcManagers.AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetAllDcManagers data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcManagerDto> GetDcManagerById(int id)
+        public async Task<ServiceResponse<DcManagerEntity>> GetDcManagerById(int id)
         {
-            var dataRsp = await _context.DcManagers.Where(m => m.Id == id).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
-        }
+            var serviceResponse = new ServiceResponse<DcManagerEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcManagers.Where(m => m.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcManagerById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
 
-        public async Task<GetDcManagerDto> GetDcManagerById(int id, int managerId)
+        }
+        public async Task<ServiceResponse<DcManagerEntity>> GetDcManagerById(int id, int managerId)
         {
-            var dataRsp = await _context.DcManagers.Where(m => m.Id == id && m.ManagerId == managerId).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
+            var serviceResponse = new ServiceResponse<DcManagerEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcManagers
+                    .Where(m => m.Id == id && m.ManagerId == managerId)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcManagerById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcManagerDto> GetDcManagerByManagerId(int id)
+        public async Task<ServiceResponse<DcManagerEntity>> GetDcManagerByManagerId(int id)
         {
-            var dataRsp = await _context.DcManagers.Where(m => m.ManagerId == id).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
+            var serviceResponse = new ServiceResponse<DcManagerEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcManagers
+                    .Where(m => m.ManagerId == id)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcManagerByManagerId data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcManagerDto> UpdateDcManager(GetDcManagerDto dcManagerDto)
+        public async Task<ServiceResponse> UpdateDcManager(DcManagerEntity dcManager)
         {
-            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
-            _context.DcManagers.Update(dcManager);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcManagerById(dcManagerDto.Id);
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcManagers.Update(dcManager);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"UpdateDcManager data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcManagerDto> DeleteDcManager(GetDcManagerDto dcManagerDto)
+        public async Task<ServiceResponse> DeleteDcManager(DcManagerEntity dcManager)
         {
-            DcManagerEntity dcManager = _mapper.Map<DcManagerEntity>(dcManagerDto);
-            _context.DcManagers.Remove(dcManager);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcManagerById(dcManagerDto.Id);
-            return _mapper.Map<GetDcManagerDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcManagers.Remove(dcManager);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"DeleteDcManager data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
 
     }
 }

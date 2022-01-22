@@ -2,12 +2,7 @@
 using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Domain.Models.DcFrame;
 using CodeFirstApi.Entities;
-using CodeFirstApi.Models.DcClasses;
-using CodeFirstApi.Models.DcFrame;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CodeFirstApi.Domain.Models.DcClasses;
 
 namespace CodeFirstApi
 {
@@ -27,6 +22,7 @@ namespace CodeFirstApi
             CreateMap<AddDcClassDto, DcClassEntity>();
             CreateMap<DcClassEntity, GetDcClassDto>();
             CreateMap<GetDcClassDto, DcClassEntity>();
+            CreateMap<UpdateDcClassDto, DcClassEntity>();
 
         }
     }

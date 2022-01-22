@@ -1,10 +1,6 @@
-﻿using CodeFirstApi.Domain.Models.DcManager;
-using CodeFirstApi.Entities;
-using CodeFirstApi.Models.DcClasses;
-using System;
+﻿using CodeFirstApi.Domain.Models.DcClasses;
+using CodeFirstApi.Domain.Models.DcManager;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CodeFirstApi.Domain.Models.DcFrame
 {
@@ -14,6 +10,6 @@ namespace CodeFirstApi.Domain.Models.DcFrame
         public int FrameCode { get; set; }
         public string FrameName { get; set; }
         public GetDcManagerDto DcManager { get; set; }
-        public List<GetDcClassDto> Classes { get; set; }
+        public List<GetDcClassDto> DcClasses { get; set; }
     }
 }
