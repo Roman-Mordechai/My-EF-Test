@@ -37,7 +37,7 @@ namespace CodeFirstApi
             services.AddTransient<IDcClassDataService, DcClassDataService>();
             services.AddTransient<IDcClassService, DcClassService>();
 
-            services.AddControllers();
+            //services.AddControllers();
             //services.AddControllers().AddJsonOptions(x =>
             //    {
             //        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;

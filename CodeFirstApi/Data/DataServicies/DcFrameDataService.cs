@@ -2,7 +2,10 @@
 using CodeFirstApi.Domain.DataServices;
 using CodeFirstApi.Domain.Models.DcFrame;
 using CodeFirstApi.Entities;
+using CodeFirstApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,89 +16,150 @@ namespace CodeFirstApi.Data.DataServicies
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        public DcFrameDataService(DataContext context, IMapper mapper)
+        private readonly ILogger<DcFrameDataService> _logger;
+
+        public DcFrameDataService(
+            DataContext context, 
+            ILogger<DcFrameDataService> logger,
+            IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<GetDcFrameDto> AddDcFrame(AddDcFrameDto dcFrameDto)
+        public async Task<ServiceResponse> AddDcFrame(DcFrameEntity dcFrame)
         {
-            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
-            dcFrame.DcManager = await _context.DcManagers
-                .Where(m => m.Id == dcFrameDto.DcManagerId)
-                .FirstOrDefaultAsync();
-            _context.DcFrames.Add(dcFrame);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcFrameByFrameCode(dcFrameDto.FrameCode);
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcFrames.Add(dcFrame);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"AddDcFrame data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<List<GetDcFrameDto>> GetAllDcFrames()
+        public async Task<ServiceResponse<List<DcFrameEntity>>> GetAllDcFrames()
         {
-            var dataRsp = await _context.DcFrames
+            var serviceResponse = new ServiceResponse<List<DcFrameEntity>>();
+            try
+            {
+                serviceResponse.Data = await _context.DcFrames
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .ToListAsync();
-
-            return _mapper.Map<List<GetDcFrameDto>>(dataRsp);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetAllDcFrames data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcFrameDto> GetDcFrameById(int id)
+        public async Task<ServiceResponse<DcFrameEntity>> GetDcFrameById(int id)
         {
-            var dataRsp = await _context.DcFrames
+            var serviceResponse = new ServiceResponse<DcFrameEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcFrames
                 .Where(_ => _.Id == id)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcFrameById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcFrameDto> GetDcFrameById(int id, int frameCode)
+        public async Task<ServiceResponse<DcFrameEntity>> GetDcFrameById(int id, int frameCode)
         {
-            var dataRsp = await _context.DcFrames
+            var serviceResponse = new ServiceResponse<DcFrameEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcFrames
                 .Where(_ => _.Id == id && _.FrameCode == frameCode)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcFrameById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcFrameDto> GetDcFrameByFrameCode(int frameCode)
+        public async Task<ServiceResponse<DcFrameEntity>> GetDcFrameByFrameCode(int frameCode)
         {
-            var dataRsp = await _context.DcFrames
+            var serviceResponse = new ServiceResponse<DcFrameEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcFrames
                 .Where(_ => _.FrameCode == frameCode)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcFrameByFrameCode data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-
-        public async Task<GetDcFrameDto> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
+        public async Task<ServiceResponse> UpdateDcFrame(DcFrameEntity dcFrame)
         {
-            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
-            dcFrame.DcManager = await _context.DcManagers.Where(m => m.Id == dcFrameDto.DcManagerId)
-                .FirstOrDefaultAsync();
-            _context.DcFrames.Update(dcFrame);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcFrameById(dcFrameDto.Id);
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcFrames.Update(dcFrame);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"UpdateDcFrame data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
+        
+        //DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
+        //dcFrame.DcManager = await _context.DcManagers.Where(m => m.Id == dcFrameDto.DcManagerId)
+        //    .FirstOrDefaultAsync();
+        //_context.DcFrames.Update(dcFrame);
+        //await _context.SaveChangesAsync();
         }
-
-        public async Task<GetDcFrameDto> DeleteDcFrame(GetDcFrameDto dcFrameDto)
+        public async Task<ServiceResponse> DeleteDcFrame(DcFrameEntity dcFrame)
         {
-            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
-            _context.DcFrames.Remove(dcFrame);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcFrameById(dcFrameDto.Id);
-            return _mapper.Map<GetDcFrameDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcFrames.Remove(dcFrame);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"DeleteDcFrame data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
     }
 }

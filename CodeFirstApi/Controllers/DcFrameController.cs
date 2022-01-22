@@ -20,7 +20,7 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("AddFrame")]
-        public async Task<ActionResult<ServiceResponse<List<DcFrameEntity>>>> AddFrame(AddDcFrameDto dcFrameDto)
+        public async Task<ActionResult<ServiceResponse>> AddFrame(AddDcFrameDto dcFrameDto)
         {
             var rsp = await _dcFrameService.AddDcFrame(dcFrameDto);
             return Ok(rsp);
@@ -48,14 +48,14 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("UpdateDcFrame")]
-        public async Task<ActionResult<ServiceResponse<DcFrameEntity>>> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
+        public async Task<ActionResult<ServiceResponse>> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
         {
             var rsp = await _dcFrameService.UpdateDcFrame(dcFrameDto);
             return Ok(rsp);
         }
 
         [HttpPost("DeleteDcFrame")]
-        public async Task<ActionResult<ServiceResponse<DcFrameEntity>>> DeleteDcFrame(int id)
+        public async Task<ActionResult<ServiceResponse>> DeleteDcFrame(int id)
         {
             var rsp = await _dcFrameService.DeleteDcFrame(id);
             return Ok(rsp);

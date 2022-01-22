@@ -80,7 +80,6 @@ namespace CodeFirstApi.Servicies
             if (managerData.Data != null)
             {
                 _mapper.Map(dcManagerDto,managerData.Data);
-                managerData.Data.ManagerName = dcManagerDto.ManagerName;
                 serviceResponse = await _dcManagerDataService.UpdateDcManager(managerData.Data);
                 if (serviceResponse.Success)
                 {

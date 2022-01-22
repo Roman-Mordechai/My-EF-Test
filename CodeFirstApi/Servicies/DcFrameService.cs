@@ -1,6 +1,8 @@
-﻿using CodeFirstApi.Domain.DataServices;
+﻿using AutoMapper;
+using CodeFirstApi.Domain.DataServices;
 using CodeFirstApi.Domain.Models.DcFrame;
 using CodeFirstApi.Domain.Servicies;
+using CodeFirstApi.Entities;
 using CodeFirstApi.Models;
 using System;
 using System.Collections.Generic;
@@ -11,141 +13,113 @@ namespace CodeFirstApi.Servicies
     public class DcFrameService : IDcFrameService
     {
         private readonly IDcFrameDataService _dcFrameDataService;
+        private readonly IDcManagerDataService _dcManagerDataService;
+        private readonly IMapper _mapper;
 
-        public DcFrameService(IDcFrameDataService dcFrameDataService)
+        public DcFrameService(
+            IDcFrameDataService dcFrameDataService,
+            IDcManagerDataService dcManagerDataService,
+            IMapper mapper
+            )
         {
             _dcFrameDataService = dcFrameDataService;
+            _dcManagerDataService = dcManagerDataService;
+            _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<GetDcFrameDto>> AddDcFrame(AddDcFrameDto dcFrameDto)
+        public async Task<ServiceResponse> AddDcFrame(AddDcFrameDto dcFrameDto)
         {
-            var serviceResponse = new ServiceResponse<GetDcFrameDto>();
-
-            try
-            {
-                serviceResponse.Data = await _dcFrameDataService.AddDcFrame(dcFrameDto);
-                return serviceResponse;
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "AddFrame service failed! " + ex.Message;
-                return serviceResponse;
-            }
-            
+            DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
+            return await _dcFrameDataService.AddDcFrame(dcFrame);
         }
         public async Task<ServiceResponse<List<GetDcFrameDto>>> GetAllDcFrames()
         {
             var serviceResponse = new ServiceResponse<List<GetDcFrameDto>>();
-
-            try
+            var rsp = await _dcFrameDataService.GetAllDcFrames();
+            if (rsp != null)
             {
-                serviceResponse.Data = await _dcFrameDataService.GetAllDcFrames();
-                return serviceResponse;
+                serviceResponse.Data = _mapper.Map<List<GetDcFrameDto>>(rsp.Data);
             }
-            catch (Exception ex)
+            else
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetAllFrames service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = "No data found!";
             }
+            return serviceResponse;
         }
         public async Task<ServiceResponse<GetDcFrameDto>> GetDcFrameById(int id)
         {
             var serviceResponse = new ServiceResponse<GetDcFrameDto>();
-
-            try
+            var rsp = await _dcFrameDataService.GetDcFrameById(id);
+            if (rsp != null)
             {
-                serviceResponse.Data = await _dcFrameDataService.GetDcFrameById(id);
-                if (serviceResponse.Data == null)
-                {
-                    serviceResponse.Message = $"Id {id} not found.";
-                }
-                return serviceResponse;
+                serviceResponse.Data = _mapper.Map<GetDcFrameDto>(rsp.Data);
             }
-            catch (Exception ex)
+            else
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetDcFrameById service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = "No data found!";
             }
+            return serviceResponse;
         }
         public async Task<ServiceResponse<GetDcFrameDto>> GetDcFrameByFrameCode(int frameCode)
         {
             var serviceResponse = new ServiceResponse<GetDcFrameDto>();
-
-            try
+            var rsp = await _dcFrameDataService.GetDcFrameByFrameCode(frameCode);
+            if (rsp != null)
             {
-                serviceResponse.Data = await _dcFrameDataService.GetDcFrameByFrameCode(frameCode);
-                if (serviceResponse.Data == null)
-                {
-                    serviceResponse.Message = $"Frame code {frameCode} not found.";
-                }
-                return serviceResponse;
+                serviceResponse.Data = _mapper.Map<GetDcFrameDto>(rsp.Data);
             }
-            catch (Exception ex)
+            else
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "GetDcFrameByFrameCode service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = "No data found!";
             }
+            return serviceResponse;
         }
-        public async Task<ServiceResponse<GetDcFrameDto>> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
+        public async Task<ServiceResponse> UpdateDcFrame(UpdateDcFrameDto dcFrameDto)
         {
-            var serviceResponse = new ServiceResponse<GetDcFrameDto>();
+            var serviceResponse = new ServiceResponse();
 
-            try
+            var frameData = await _dcFrameDataService.GetDcFrameById(dcFrameDto.Id, dcFrameDto.FrameCode);
+            if (frameData.Data != null)
             {
-                var frameData = await _dcFrameDataService.GetDcFrameById(dcFrameDto.Id, dcFrameDto.FrameCode);
-                if (frameData != null)
-                {
-                    serviceResponse.Data = await _dcFrameDataService.UpdateDcFrame(dcFrameDto);
-                    serviceResponse.Message = $"Frame code {dcFrameDto.FrameCode} was updated.";
-                    return serviceResponse;
-                }
-                else
+                _mapper.Map(dcFrameDto, frameData.Data);
+                var mngr = await _dcManagerDataService.GetDcManagerById(dcFrameDto.DcManagerId);
+                if (mngr.Data == null)
                 {
                     serviceResponse.Success = false;
-                    serviceResponse.Message = $"Record with Id = {dcFrameDto.Id} and Frame code = {dcFrameDto.FrameCode} not found.";
+                    serviceResponse.Message = $"ManagerId {dcFrameDto.DcManagerId} not found.";
                     return serviceResponse;
                 }
-
+                frameData.Data.DcManager = mngr.Data;
+                serviceResponse = await _dcFrameDataService.UpdateDcFrame(frameData.Data);
+                if (serviceResponse.Success)
+                {
+                    serviceResponse.Message = $"Id {dcFrameDto.Id} updated.";
+                }
             }
-            catch (Exception ex)
+            else
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "UpdateDcFrame service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = $"Id {dcFrameDto.Id}, FrameCode {dcFrameDto.FrameCode} not found.";
             }
+            return serviceResponse;
         }
 
-        public async Task<ServiceResponse<GetDcFrameDto>> DeleteDcFrame(int id)
+        public async Task<ServiceResponse> DeleteDcFrame(int id)
         {
-            var serviceResponse = new ServiceResponse<GetDcFrameDto>();
+            var serviceResponse = new ServiceResponse();
 
-            try
+            var frameData = await _dcFrameDataService.GetDcFrameById(id);
+            if (frameData.Data != null)
             {
-                var frameData = await _dcFrameDataService.GetDcFrameById(id);
-                if (frameData != null)
-                {
-                    serviceResponse.Data = await _dcFrameDataService.DeleteDcFrame(frameData);
-                    serviceResponse.Message = $"Id {id} was deleted.";
-                    return serviceResponse;
-                }
-                else
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = $"Id = {id} not found.";
-                    return serviceResponse;
-                }
-
+                serviceResponse = await _dcFrameDataService.DeleteDcFrame(frameData.Data);
+                serviceResponse.Message = $"Id {id} deleted.";
             }
-            catch (Exception ex)
+            else
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "UpdateDcFrame service failed! " + ex.Message;
-                return serviceResponse;
+                serviceResponse.Message = $"Id {id} not found.";
             }
+            return serviceResponse;
         }
     }
 }
