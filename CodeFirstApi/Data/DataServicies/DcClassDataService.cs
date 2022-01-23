@@ -2,7 +2,10 @@
 using CodeFirstApi.Domain.DataServices;
 using CodeFirstApi.Domain.Models.DcClasses;
 using CodeFirstApi.Entities;
+using CodeFirstApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,62 +16,136 @@ namespace CodeFirstApi.Data.DataServicies
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
+        private readonly ILogger<DcClassDataService> _logger;
 
-        public DcClassDataService(DataContext context, IMapper mapper)
+        public DcClassDataService(
+            DataContext context,
+            ILogger<DcClassDataService> logger,
+            IMapper mapper)
         {
             _context = context;
+            _logger = logger;
             _mapper = mapper;
         }
 
-        public async Task<GetDcClassDto> AddDcClass(AddDcClassDto dcClassDto)
+        public async Task<ServiceResponse> AddDcClass(DcFrameEntity dcFrame)
         {
-            var dcFrame = await _context.DcFrames
-                .Where(m => m.Id == dcClassDto.DcFrameId)
-                .Include(s => s.DcClasses)
-                .FirstOrDefaultAsync();
-            DcClassEntity dcClass = _mapper.Map<DcClassEntity>(dcClassDto);
-            dcFrame.DcClasses.Add(dcClass);
-            _context.DcFrames.Update(dcFrame);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcClassById(dcClass.Id);
-            return _mapper.Map<GetDcClassDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcFrames.Update(dcFrame);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"AddDcClass data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<GetDcClassDto> GetDcClassById(int id)
+        public async Task<ServiceResponse<DcClassEntity>> GetDcClassById(int id)
         {
-            var dataRsp = await _context.DcClasses.Where(_ => _.Id == id).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcClassDto>(dataRsp);
+            var serviceResponse = new ServiceResponse<DcClassEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcClasses.Where(_ => _.Id == id)
+                    .Include(c => c.DcFrame)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcClassById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<GetDcClassDto> GetDcClassById(int id, int frameId)
+        public async Task<ServiceResponse<DcClassEntity>> GetDcClassById(int id, int frameId)
         {
-            var dataRsp = await _context.DcClasses.Where(_ => _.Id == id && _.DcFrame.Id == frameId ).AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<GetDcClassDto>(dataRsp);
+            var serviceResponse = new ServiceResponse<DcClassEntity>();
+            try
+            {
+                serviceResponse.Data = await _context.DcClasses
+                    .Where(_ => _.Id == id && _.DcFrame.Id == frameId)
+                    .Include(c => c.DcFrame)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcClassById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<List<GetDcClassDto>> GetDcClassesByFrameId(int frameId)
+        public async Task<ServiceResponse<List<DcClassEntity>>> GetDcClassesByFrameId(int frameId)
         {
-            var dataRsp = await _context.DcClasses.Where(_ => _.DcFrame.Id == frameId).AsNoTracking().ToListAsync();
-            return _mapper.Map<List<GetDcClassDto>>(dataRsp);
+            var serviceResponse = new ServiceResponse<List<DcClassEntity>>();
+            try
+            {
+                serviceResponse.Data = await _context.DcClasses
+                    .Where(_ => _.DcFrame.Id == frameId)
+                    .Include(c => c.DcFrame)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcClassById data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<List<GetDcClassDto>> GetDcClassesByFrameCode(int frameCode)
+        public async Task<ServiceResponse<List<DcClassEntity>>> GetDcClassesByFrameCode(int frameCode)
         {
-            var dataRsp = await _context.DcClasses.Where(_ => _.DcFrame.FrameCode == frameCode).AsNoTracking().ToListAsync();
-            return _mapper.Map<List<GetDcClassDto>>(dataRsp);
+            var serviceResponse = new ServiceResponse<List<DcClassEntity>>();
+            try
+            {
+                serviceResponse.Data = await _context.DcClasses
+                    .Where(_ => _.DcFrame.FrameCode == frameCode)
+                    .Include(c => c.DcFrame)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"GetDcClassesByFrameCode data service failed! {ex.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<GetDcClassDto> UpdateDcClass(UpdateDcClassDto dcClassDto)
+        public async Task<ServiceResponse> UpdateDcClass(DcClassEntity dcClass)
         {
-            DcClassEntity dcClass = _mapper.Map<DcClassEntity>(dcClassDto);
-            _context.DcClasses.Update(dcClass);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcClassById(dcClassDto.Id);
-            return _mapper.Map<GetDcClassDto>(dataRsp);
-
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcClasses.Update(dcClass);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"AddDcClass data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
-        public async Task<GetDcClassDto> DeleteDcClass(GetDcClassDto dcClassDto)
+        public async Task<ServiceResponse> DeleteDcClass(DcClassEntity dcClass)
         {
-            DcClassEntity dcClass = _mapper.Map<DcClassEntity>(dcClassDto);
-            _context.DcClasses.Remove(dcClass);
-            await _context.SaveChangesAsync();
-            var dataRsp = await GetDcClassById(dcClassDto.Id);
-            return _mapper.Map<GetDcClassDto>(dataRsp);
+            var serviceResponse = new ServiceResponse();
+            try
+            {
+                _context.DcClasses.Remove(dcClass);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"AddDcClass data service failed! {ex.Message} : {ex.InnerException.Message}";
+            }
+            return serviceResponse;
         }
 
     }

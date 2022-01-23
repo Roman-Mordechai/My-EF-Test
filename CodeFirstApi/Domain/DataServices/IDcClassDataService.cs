@@ -1,4 +1,6 @@
 ﻿using CodeFirstApi.Domain.Models.DcClasses;
+using CodeFirstApi.Entities;
+using CodeFirstApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,12 +8,12 @@ namespace CodeFirstApi.Domain.DataServices
 {
     public interface IDcClassDataService
     {
-        Task<GetDcClassDto> AddDcClass(AddDcClassDto dcClassDto);
-        Task<GetDcClassDto> GetDcClassById(int id);
-        Task<GetDcClassDto> GetDcClassById(int id, int frameId);
-        Task<List<GetDcClassDto>> GetDcClassesByFrameId(int frameId);
-        Task<List<GetDcClassDto>> GetDcClassesByFrameCode(int frameCode);
-        Task<GetDcClassDto> UpdateDcClass(UpdateDcClassDto dcClassDto);
-        Task<GetDcClassDto> DeleteDcClass(GetDcClassDto dcClassDto);
+        Task<ServiceResponse> AddDcClass(DcFrameEntity dcFrame);
+        Task<ServiceResponse<DcClassEntity>> GetDcClassById(int id);
+        Task<ServiceResponse<DcClassEntity>> GetDcClassById(int id, int frameId);
+        Task<ServiceResponse<List<DcClassEntity>>> GetDcClassesByFrameId(int frameId);
+        Task<ServiceResponse<List<DcClassEntity>>> GetDcClassesByFrameCode(int frameCode);
+        Task<ServiceResponse> UpdateDcClass(DcClassEntity dcClass);
+        Task<ServiceResponse> DeleteDcClass(DcClassEntity dcClass);
     }
 }

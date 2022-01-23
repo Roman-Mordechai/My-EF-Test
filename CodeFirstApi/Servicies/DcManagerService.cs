@@ -50,7 +50,7 @@ namespace CodeFirstApi.Servicies
             var rsp = await _dcManagerDataService.GetDcManagerById(id);
             if (rsp.Data != null)
             {
-                serviceResponse.Data = _mapper.Map<GetDcManagerDto>(rsp.Data);
+                serviceResponse.Data = _mapper.Map(rsp.Data, serviceResponse.Data);
             }
             else
             {

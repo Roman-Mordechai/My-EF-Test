@@ -19,13 +19,13 @@ namespace CodeFirstApi.Controllers
         }
 
         [HttpPost("AddClass")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcClassDto>>>> AddDcClass(AddDcClassDto dcClassDto)
+        public async Task<ActionResult<ServiceResponse>> AddDcClass(AddDcClassDto dcClassDto)
         {
             return Ok(await _dcClassService.AddDcClass(dcClassDto));
         }
 
         [HttpGet("GetDcClassById")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcClassDto>>>> GetDcClassById(int id)
+        public async Task<ActionResult<ServiceResponse<GetDcClassDto>>> GetDcClassById(int id)
         {
             return Ok(await _dcClassService.GetDcClassById(id));
         }
@@ -34,6 +34,24 @@ namespace CodeFirstApi.Controllers
         public async Task<ActionResult<ServiceResponse<List<GetDcClassDto>>>> GetDcClassesByFrameId(int frameId)
         {
             return Ok(await _dcClassService.GetDcClassesByFrameId(frameId));
+        }
+
+        [HttpPost("GetDcClassesByFrameCode")]
+        public async Task<ActionResult<ServiceResponse<List<GetDcClassDto>>>> GetDcClassesByFrameCode(int frameCode)
+        {
+            return Ok(await _dcClassService.GetDcClassesByFrameCode(frameCode));
+        }
+
+        [HttpPost("UpdateDcClass")]
+        public async Task<ActionResult<ServiceResponse>> UpdateDcClass(UpdateDcClassDto dcClassDto)
+        {
+            return Ok(await _dcClassService.UpdateDcClass(dcClassDto));
+        }
+
+        [HttpPost("DeleteDcClass")]
+        public async Task<ActionResult<ServiceResponse>> DeleteDcClass(int classId)
+        {
+            return Ok(await _dcClassService.DeleteDcClass(classId));
         }
 
     }

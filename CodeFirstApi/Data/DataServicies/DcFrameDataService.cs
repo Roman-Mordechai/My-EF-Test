@@ -14,17 +14,15 @@ namespace CodeFirstApi.Data.DataServicies
 {
     public class DcFrameDataService : IDcFrameDataService
     {
-        private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly ILogger<DcFrameDataService> _logger;
 
         public DcFrameDataService(
             DataContext context, 
-            ILogger<DcFrameDataService> logger,
-            IMapper mapper)
+            ILogger<DcFrameDataService> logger
+            )
         {
             _context = context;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -72,7 +70,6 @@ namespace CodeFirstApi.Data.DataServicies
                 .Where(_ => _.Id == id)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -92,7 +89,6 @@ namespace CodeFirstApi.Data.DataServicies
                 .Where(_ => _.Id == id && _.FrameCode == frameCode)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -112,7 +108,6 @@ namespace CodeFirstApi.Data.DataServicies
                 .Where(_ => _.FrameCode == frameCode)
                 .Include(c => c.DcClasses)
                 .Include(c => c.DcManager)
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -138,12 +133,6 @@ namespace CodeFirstApi.Data.DataServicies
                 serviceResponse.Message = $"UpdateDcFrame data service failed! {ex.Message} : {ex.InnerException.Message}";
             }
             return serviceResponse;
-        
-        //DcFrameEntity dcFrame = _mapper.Map<DcFrameEntity>(dcFrameDto);
-        //dcFrame.DcManager = await _context.DcManagers.Where(m => m.Id == dcFrameDto.DcManagerId)
-        //    .FirstOrDefaultAsync();
-        //_context.DcFrames.Update(dcFrame);
-        //await _context.SaveChangesAsync();
         }
         public async Task<ServiceResponse> DeleteDcFrame(DcFrameEntity dcFrame)
         {
