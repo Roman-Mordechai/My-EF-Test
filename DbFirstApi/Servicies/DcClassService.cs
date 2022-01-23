@@ -60,21 +60,6 @@ namespace DbFirstApi.Servicies
             }
             return serviceResponse;
         }
-        public async Task<ServiceResponse<List<GetDcClassDto>>> GetDcClassesByFrameCode(int id)
-        {
-            var serviceResponse = new ServiceResponse<List<GetDcClassDto>>();
-
-            var rsp = await _dcClassDataService.GetDcClassesByFrameCode(id);
-            if (rsp.Data != null)
-            {
-                serviceResponse.Data = _mapper.Map(rsp.Data, serviceResponse.Data);
-            }
-            else
-            {
-                serviceResponse.Message = $"Id {id} not found.";
-            }
-            return serviceResponse;
-        }
         public async Task<ServiceResponse> UpdateDcClass(UpdateDcClassDto dcClassDto)
         {
             var serviceResponse = new ServiceResponse();

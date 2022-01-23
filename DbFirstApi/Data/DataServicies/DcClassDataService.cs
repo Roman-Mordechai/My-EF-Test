@@ -94,23 +94,6 @@ namespace DbFirstApi.Data.DataServicies
             }
             return serviceResponse;
         }
-        public async Task<ServiceResponse<List<DcClassEntity>>> GetDcClassesByFrameCode(int frameCode)
-        {
-            var serviceResponse = new ServiceResponse<List<DcClassEntity>>();
-            try
-            {
-                serviceResponse.Data = await _context.DcClasses
-                    .Where(_ => _.DcFrameId == frameCode)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                serviceResponse.Success = false;
-                serviceResponse.Message = $"GetDcClassesByFrameCode data service failed! {ex.Message}";
-            }
-            return serviceResponse;
-        }
         public async Task<ServiceResponse> UpdateDcClass(DcClassEntity dcClass)
         {
             var serviceResponse = new ServiceResponse();

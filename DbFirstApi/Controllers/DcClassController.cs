@@ -36,12 +36,6 @@ namespace DbFirstApi.Controllers
             return Ok(await _dcClassService.GetDcClassesByFrameId(frameId));
         }
 
-        [HttpPost("GetDcClassesByFrameCode")]
-        public async Task<ActionResult<ServiceResponse<List<GetDcClassDto>>>> GetDcClassesByFrameCode(int frameCode)
-        {
-            return Ok(await _dcClassService.GetDcClassesByFrameCode(frameCode));
-        }
-
         [HttpPost("UpdateDcClass")]
         public async Task<ActionResult<ServiceResponse>> UpdateDcClass(UpdateDcClassDto dcClassDto)
         {

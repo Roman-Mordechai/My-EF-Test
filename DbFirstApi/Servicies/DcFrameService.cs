@@ -94,7 +94,6 @@ namespace DbFirstApi.Servicies
             }
             return serviceResponse;
         }
-
         public async Task<ServiceResponse> DeleteDcFrame(int id)
         {
             var serviceResponse = new ServiceResponse();
