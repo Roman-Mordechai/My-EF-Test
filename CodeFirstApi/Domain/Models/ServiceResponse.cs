@@ -1,4 +1,4 @@
-﻿namespace CodeFirstApi.Models
+﻿namespace CodeFirstApi.Domain.Models
 {
     public class ServiceResponse<T>
     {

@@ -1,6 +1,6 @@
-﻿using CodeFirstApi.Domain.Models.DcClasses;
+﻿using CodeFirstApi.Domain.Models;
+using CodeFirstApi.Domain.Models.DcClasses;
 using CodeFirstApi.Domain.Servicies;
-using CodeFirstApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

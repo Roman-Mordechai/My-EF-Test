@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using CodeFirstApi.Domain.Models.DcManager;
 using CodeFirstApi.Domain.Models.DcFrame;
-using CodeFirstApi.Entities;
 using CodeFirstApi.Domain.Models.DcClasses;
+using CodeFirstApi.Domain.Entities;
 
 namespace CodeFirstApi
 {

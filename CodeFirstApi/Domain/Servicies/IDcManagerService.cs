@@ -1,5 +1,5 @@
-﻿using CodeFirstApi.Domain.Models.DcManager;
-using CodeFirstApi.Models;
+﻿using CodeFirstApi.Domain.Models;
+using CodeFirstApi.Domain.Models.DcManager;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

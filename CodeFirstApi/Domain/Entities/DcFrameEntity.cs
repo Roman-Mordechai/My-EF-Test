@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeFirstApi.Entities
+namespace CodeFirstApi.Domain.Entities
 {
     public class DcFrameEntity
     {

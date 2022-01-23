@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using CodeFirstApi.Domain.DataServices;
+using CodeFirstApi.Domain.Entities;
+using CodeFirstApi.Domain.Models;
 using CodeFirstApi.Domain.Models.DcClasses;
 using CodeFirstApi.Domain.Servicies;
-using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

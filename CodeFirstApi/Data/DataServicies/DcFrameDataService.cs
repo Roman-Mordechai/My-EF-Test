@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using CodeFirstApi.Domain.DataServices;
-using CodeFirstApi.Domain.Models.DcFrame;
-using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
+﻿using CodeFirstApi.Domain.DataServices;
+using CodeFirstApi.Domain.Entities;
+using CodeFirstApi.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

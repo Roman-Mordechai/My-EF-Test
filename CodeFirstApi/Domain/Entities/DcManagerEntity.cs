@@ -1,4 +1,4 @@
-﻿namespace CodeFirstApi.Entities
+﻿namespace CodeFirstApi.Domain.Entities
 {
     public class DcManagerEntity
     {

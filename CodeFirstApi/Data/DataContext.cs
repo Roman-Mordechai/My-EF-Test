@@ -1,4 +1,4 @@
-﻿using CodeFirstApi.Entities;
+﻿using CodeFirstApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeFirstApi.Data

@@ -1,6 +1,5 @@
-﻿using CodeFirstApi.Domain.Models.DcManager;
-using CodeFirstApi.Entities;
-using CodeFirstApi.Models;
+﻿using CodeFirstApi.Domain.Entities;
+using CodeFirstApi.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
